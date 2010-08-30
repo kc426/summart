@@ -9,15 +9,18 @@ def main():
 	print getWordFunction(word)
 
 def getWordFunction(word):
-	f = urllib.urlopen("http://www2.merriam-webster.com/cgi-bin/collegiate?"+word)
-	s = f.read()
-	f.close()
-	text = html2txt(s)
+	text = getHtmlText("http://www2.merriam-webster.com/cgi-bin/collegiate?"+word)
 	for line in text.split('\n'):
 		if line.startswith("Function:"):
 			field = line.split(':')
 			return field[1].strip()
 
+def getHtmlText(url):
+	f = urllib.urlopen(url)
+	s = f.read()
+	f.close()
+	return html2txt(s)
+	
 def html2txt(s, hint = 'entity', code = 'ISO-8859-1'):
 	"""Convert the html to raw txt
 	- suppress all return

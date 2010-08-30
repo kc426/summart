@@ -17,7 +17,7 @@
 import sys
 import random
 
-MAXGEN = 10000;	# max # of words to output
+MAXGEN = 300;	# max # of words to output
 NONWORD = "\n";	# sentinel
 
 MAX_LINE_LEN = 76	# for output only
@@ -61,7 +61,7 @@ def build( istream, table ) :
 
 ######   GENERATE TEXT   ####################
 
-def generate( table ) :
+def generate( table, MAXGEN ) :
 	"""Given a table (a Markov Chain), starts at (NONWORD,NONWORD), prints a
 		single story
 	Returns: # of words output"""
@@ -82,12 +82,15 @@ def generate( table ) :
 			if len( line ) > 0 :
 				print line
 			break
-		if len( line ) + len( suf ) > MAX_LINE_LEN :
-			print line
-			line = ""
+		#if len( line ) + len( suf ) > MAX_LINE_LEN :
+		#	print line
+		#	line = ""
 		line = line + " " + suf
 
 		w1, w2 = w2, suf
+	# print until it sees the last period
+	periodIndex = line.rfind('.')+1
+	print line[:periodIndex]
 
 def main( argv = sys.argv ) :
 
@@ -105,7 +108,7 @@ def main( argv = sys.argv ) :
 			build( fin, table )
 			fin.close()
 	
-	generate( table )
+	generate( table, MAXGEN )
 
 
 # check to see if we are being called explicitly, or imported

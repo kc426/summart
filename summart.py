@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import summartUtil
+from Word import Word
 import markov
 import sys
 
-DEBUG = False 
+DEBUG = True 
 
 # Words to not type
 BLACK_LIST = [ "the", "has", "hasn't", "have", "havn't", "a", "an", "is", "it", "to", "its" ]
@@ -25,7 +26,7 @@ def analyze_sentence(sentence):
 		# See if word exists in our dictionary
 		# If not create it
 		if dictionary.has_key(i) == True:
-			current_word = dictionary["i"]
+			current_word = dictionary[i]
 		else:
 			current_word = Word(i)
 			dictionary[i] = current_word
@@ -54,7 +55,7 @@ def analyze_sentence(sentence):
 		# Get the word function and add it to a list of that function
 		# Since they are in the same sentence even if they aren't next
 		# To eachother they are have a connection
-		func = getWordFunction(i)
+		func = summartUtil.getWordFunction(i)
 
 		if func == "noun":
 			nouns.append(current_word)
@@ -62,9 +63,6 @@ def analyze_sentence(sentence):
 			verbs.append(current_word)
 		elif func == "adjective":
 			adjectives.append(current_word)
-
-	for i in nouns:
-		
 
 def main():	
 	text = ""
@@ -79,7 +77,7 @@ def main():
 		filename = raw_input("Enter the filename: ")
 		fin = file( filename )
 		for line in fin:
-			 text += line + '\n'
+			text += line + '\n'
 		fin.close()
 	else:
 		print "Please enter the right option"
@@ -89,6 +87,11 @@ def main():
 		MAXGEN = 200
 	else:
 		MAXGEN = int(raw_input("Enter number of words you want to summarize: "))
+	
+	# start analyze
+	sentences = summartUtil.getSentences(text)
+	for s in sentences:
+		analyze_sentence(s)
 
 if __name__ == "__main__":
 	main()

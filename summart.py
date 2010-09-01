@@ -23,7 +23,7 @@ def analyze_sentence(sentence):
 	other = []
 	previous_word = start_sentence
 
-	for i in sentence:
+	for i in sentence.split():
 		# See if word exists in our dictionary
 		# If not create it
 		if dictionary.has_key(i) == True:

@@ -10,28 +10,47 @@ DEBUG = False
 # Words to not type
 BLACK_LIST = [ "the", "has", "hasn't", "have", "havn't", "a", "an", "is", "it", "to", "its" ]
 
-start = Word(None)
+# The beginning of a sentence
+start_sentence = Word(None)
+# All the words we know about
+dictionary = dict()
 
-def getWordType(sentence, type):
-	types = []
-	skip = False
+def analyze_sentence(sentence):
+	noun = []
+	verb = []
+	adjective = []
+	other = []
+	previous_word = start_sentence
 
 	for i in sentence:
+		# See if word exists in our dictionary
+		# If not create it
+		if dictionary.has_key(i) == True:
+			current_word = dictionary["i"]
+		else:
+			current_word = Word(i)
+
+		# Increase how much the word has been used
+		current_word.increaseUsage()
+
+		previous_word.addPostWord(current_word)
+		current_word.addPreWord(previous_word)
+
+		skip = False
 		for j in BLACK_LIST:
 			if i == j:
 				skip = True
 
-		if getWordFunction(i) == type and skip != True:
-			types.append(i)
+		func = getWordFunction(i)
 
-	return types
-
-def analyze_sentence(sentence):
-	related = getWordType(sentence, "noun")
-	related.append(getWordType(sentence, "verb")
-	adjectives = getWordType(sentence, "adjective")
-
-	
+		if func == "noun":
+			noun.append(current_word)
+		elif func == "verb":
+			verb.append(current_word)
+		elif func == "adjective":
+			adjective.append(current_word)
+		else
+			other.append(current_word)
 
 def main():	
 	text = ""

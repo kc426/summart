@@ -7,7 +7,33 @@ import sys
 
 DEBUG = False 
 
-def main():
+# Words to not type
+BLACK_LIST = [ "the", "has", "hasn't", "have", "havn't", "a", "an", "is", "it", "to", "its" ]
+
+start = Word(None)
+
+def getWordType(sentence, type):
+	types = []
+	skip = False
+
+	for i in sentence:
+		for j in BLACK_LIST:
+			if i == j:
+				skip = True
+
+		if getWordFunction(i) == type and skip != True:
+			types.append(i)
+
+	return types
+
+def analyze_sentence(sentence):
+	related = getWordType(sentence, "noun")
+	related.append(getWordType(sentence, "verb")
+	adjectives = getWordType(sentence, "adjective")
+
+	
+
+def main():	
 	text = ""
 	option = int(raw_input("1. URL, 2. plain text:"))
 	if option == 1:
@@ -30,9 +56,6 @@ def main():
 		MAXGEN = 200
 	else:
 		MAXGEN = int(raw_input("Enter number of words you want to summarize: "))
-	table = {}
-	markov.build(text.split('\n'), table)
-	markov.generate(table, MAXGEN)
 
 if __name__ == "__main__":
 	main()

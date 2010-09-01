@@ -56,13 +56,29 @@ def analyze_sentence(sentence):
 		# Since they are in the same sentence even if they aren't next
 		# To eachother they are have a connection
 		func = summartUtil.getWordFunction(i)
-
+		
 		if func == "noun":
 			nouns.append(current_word)
 		elif func == "verb":
 			verbs.append(current_word)
 		elif func == "adjective":
 			adjectives.append(current_word)
+
+	for i in nouns:
+		current_word = i
+		for j in nouns:
+			if i == j:
+				continue
+
+			current_word.addRelated(j)
+
+		for j in verbs:
+			current_word.addRelated(j)
+			j.addRelated(current_word)
+
+		for j in adjectives:
+			current_word.addAdjective(j)
+			j.addRelated(current_word)
 
 def main():	
 	text = ""

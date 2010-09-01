@@ -32,56 +32,56 @@ class Word:
 		else:
 			return False
 
-	def getWord():
+	def getWord(self):
 		return self.__main_word__
 
-	def increaseUsage():
+	def increaseUsage(self):
 		self.__usage_count__ += 1
 
-	def getUsage():
+	def getUsage(self):
 		return self.__usage_count__
 
-	def addRelated(word):
+	def addRelated(self, word):
 		for i in self.__related_words__:
 			if i == word:
 				return
 
 		self.__related_words__.append(word)
 
-	def getRelated():
+	def getRelated(self):
 		el = random.randint(0, len(self.__related_words__))
 		return self.__related_words__[el]
 
-	def addAdjective(word):
+	def addAdjective(self, word):
 		for i in self.__adjectives__:
 			if i == word:
 				return
 
 		self.__adjectives__.append(word)
 
-	def getAdjective():
+	def getAdjective(self):
 		el = random.randint(0, len(self.__adjectives__))
 		return self.__adjectives__[el]
 
-	def addPostWord(word):
+	def addPostWord(self, word):
 		for i in self.__post_words__:
 			if i == word:
 				return
 
 		self.__post_words__.append(word)
 
-	def getPostWord():
+	def getPostWord(self):
 		el = random.randint(0, len(self.__post_words__))
 		return self.__post_words__[el]
 
-	def addPreWord(word):
+	def addPreWord(self, word):
 		for i in self.__pre_words__:
 			if i == word:
 				return
 
 		self.__pre_words__.append(word)
 
-	def getPreWord():
+	def getPreWord(self):
 		el = random.randint(0, len(self.__pre_words__))
 		return self.__pre_words__[el]
 

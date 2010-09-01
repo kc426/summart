@@ -42,7 +42,7 @@ def analyze_sentence(sentence):
 			if i == j:
 				skip = True
 
-		func = getWordFunction(i)
+		func = summartUtil.getWordFunction(i)
 
 		if func == "noun":
 			noun.append(current_word)
@@ -50,7 +50,7 @@ def analyze_sentence(sentence):
 			verb.append(current_word)
 		elif func == "adjective":
 			adjective.append(current_word)
-		else
+		else:
 			other.append(current_word)
 
 def main():	

@@ -26,7 +26,7 @@ def getHtmlText(url):
 # @return a list of sentences
 def getSentences(text):
 	text = text.replace('\n', '')
-	lst = re.split(r"([\.\?\!\s]+)", text)
+	lst = re.split(r"([\.\?\!]+\s?)", text)
 	sentences = []
 	for i in range(0, len(lst), 2):
 		if i+1 < len(lst):

@@ -36,7 +36,7 @@ class Word:
 		return self.__main_word__
 
 	def increaseUsage():
-		self.__usage_count__++
+		self.__usage_count__ += 1
 
 	def getUsage():
 		return self.__usage_count__

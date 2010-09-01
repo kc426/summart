@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 # markov.py - learn from input file(s), produce some fun output.
 #		Uses 2-word prefixes
 #
@@ -16,9 +17,10 @@
 
 import sys
 import random
+from Word import Word
 
 MAXGEN = 300;	# max # of words to output
-NONWORD = "\n";	# sentinel
+STARTWORD = "start word";	# sentinel
 
 MAX_LINE_LEN = 76	# for output only
 	# note, a single string > 76 chars will not be broken
@@ -28,66 +30,61 @@ MAX_LINE_LEN = 76	# for output only
 ########   BUILD TABLE   #############
 
 def build( istream, table ) :
-	"""Given an istream file and a hash table, reads istream, placing
-	prefix/suffix pairs into the dictionary
+	"""Given an istream file and a hash table, reads istream, 
 	Returns the # of words inserted into table"""
 
-	w1 = w2 = NONWORD	# initial state
 	rV = 0
 
 	for l in istream :			# grab a line
+		current_word = Word(None)
+		previous_word = Word(None)
+		
 		l = l.strip()
 		for tok in l.split() :		# grab each word (with pumctuation and caps)
 			rV += 1
-			key = (w1,w2)
-				# insert state into table
-			if table.has_key( key ) :		# just append to satellite data
-				table[ key ].append( tok )
-			else :											# new entry.  create list
-				table[ key ] = [ tok ]
+			if len(table) <= 0:
+				table[STARTWORD] = Word(tok)
+			elif table.has_key(tok):
+				current_word = table[tok]
+			else:
+				current_word = Word(tok)
+				table[tok] = current_word
 
-				# move our prefix ahead
-			w1, w2 = w2, tok
+			# Increase how much the word has been used
+			current_word.increaseUsage()
 
-		# EOF, so, close the story (insert "stop here" marker into table)
-	key = (w1, w2)
-	if table.has_key( key ) :
-		table[ key ].append( NONWORD )
-	else :
-		table[ key ] = [ NONWORD ]
-	
+			# Link words together as valid words that can be next to
+			# eachother
+			previous_word.addPostWord(current_word)
+			current_word.addPreWord(previous_word)
+
+			previous_word = current_word
 	return rV
+	
 
 
 ######   GENERATE TEXT   ####################
 
 def generate( table, MAXGEN ) :
-	"""Given a table (a Markov Chain), starts at (NONWORD,NONWORD), prints a
-		single story
-	Returns: # of words output"""
-
-		# set our "start" condition
-	w1 = w2 = NONWORD;
-
 	line = ""	# to accumulate words, print a line at a time
+	current_word = STARTWORD
 
 	for i in range( MAXGEN ) :
-			# get our hands on the list
-		key = (w1,w2)
-		sufList = table[key]
+		current_word_O = table[current_word]
+		 
 			# choose a suffix from the list
-		suf = random.choice( sufList )
+		word = random.choice( current_word_O.getPostWord() )
 
-		if suf == NONWORD :	# caught our "end story" marker.  Get out
-			if len( line ) > 0 :
-				print line
-			break
+		#if suf == NONWORD :	# caught our "end story" marker.  Get out
+		#	if len( line ) > 0 :
+		#		print line
+		#	break
 		#if len( line ) + len( suf ) > MAX_LINE_LEN :
 		#	print line
 		#	line = ""
-		line = line + " " + suf
+		line = line + " " + word.getPostWord()
 
-		w1, w2 = w2, suf
+		current_word = word.getPostWord
 	# print until it sees the last period
 	periodIndex = line.rfind('.')+1
 	print line[:periodIndex]

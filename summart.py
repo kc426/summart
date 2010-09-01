@@ -16,10 +16,9 @@ start_sentence = Word(None)
 dictionary = dict()
 
 def analyze_sentence(sentence):
-	noun = []
-	verb = []
-	adjective = []
-	other = []
+	nouns = []
+	verbs = []
+	adjectives = []
 	previous_word = start_sentence
 
 	for i in sentence:
@@ -29,28 +28,43 @@ def analyze_sentence(sentence):
 			current_word = dictionary["i"]
 		else:
 			current_word = Word(i)
+			dictionary[i] = current_word
 
 		# Increase how much the word has been used
 		current_word.increaseUsage()
 
+		# Link words together as valid words that can be next to
+		# eachother
 		previous_word.addPostWord(current_word)
 		current_word.addPreWord(previous_word)
 
+		previous_word = current_word
+
+		# Check if the word is black listed meaning we don't want
+		# any contextual linking
 		skip = False
 		for j in BLACK_LIST:
 			if i == j:
 				skip = True
+				break
 
+		if skip == True:
+			continue
+
+		# Get the word function and add it to a list of that function
+		# Since they are in the same sentence even if they aren't next
+		# To eachother they are have a connection
 		func = getWordFunction(i)
 
 		if func == "noun":
-			noun.append(current_word)
+			nouns.append(current_word)
 		elif func == "verb":
-			verb.append(current_word)
+			verbs.append(current_word)
 		elif func == "adjective":
-			adjective.append(current_word)
-		else
-			other.append(current_word)
+			adjectives.append(current_word)
+
+	for i in nouns:
+		
 
 def main():	
 	text = ""

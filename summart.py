@@ -11,19 +11,25 @@ DEBUG = True
 # Words to not type
 BLACK_LIST = [ "the", "has", "hasn't", "have", "havn't", "a", "an", "is", "it", "to", "its" ]
 
-# The words that can start a sentence
-start_word = Word(None)
-# All the words we know about
-word_dictionary = dict()
 # The grammer a sentence can start with
 start_grammer = Word(None)
+# The grammer a sentence can end with
+end_grammer = Word('\n')
 # All the grammer we know about
-grammer_dictionary = dict()
+grammer_dictionary = {None:start_grammer, '\n':end_grammer}
+# The words that can start a sentence
+start_word = Word(None, start_grammer)
+# The words that can end a sentence
+end_word = Word('\n', end_grammer)
+# All the words we know about
+word_dictionary = {None:start_word, '\n':end_word}
 
 def analyze_sentence(sentence):
 	nouns = []
 	verbs = []
 	adjectives = []
+	current_word = start_word
+	current_grammer = start_grammer
 	previous_word = start_word
 	previous_grammer = start_grammer
 
@@ -96,6 +102,9 @@ def analyze_sentence(sentence):
 		for j in adjectives:
 			current_word.addAdjective(j)
 			j.addRelated(current_word)
+
+	end_word.addPreWord(current_word)
+	end_grammer.addPreWord(current_grammer)
 
 def main():	
 	text = ""

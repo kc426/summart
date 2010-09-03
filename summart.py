@@ -11,35 +11,56 @@ DEBUG = True
 # Words to not type
 BLACK_LIST = [ "the", "has", "hasn't", "have", "havn't", "a", "an", "is", "it", "to", "its" ]
 
-# The beginning of a sentence
-start_sentence = Word(None)
+# The words that can start a sentence
+start_word = Word(None)
 # All the words we know about
-dictionary = dict()
+word_dictionary = dict()
+# The grammer a sentence can start with
+start_grammer = Word(None)
+# All the grammer we know about
+grammer_dictionary = dict()
 
 def analyze_sentence(sentence):
 	nouns = []
 	verbs = []
 	adjectives = []
-	previous_word = start_sentence
+	previous_word = start_word
+	previous_grammer = start_grammer
 
 	for i in sentence.split():
 		# See if word exists in our dictionary
 		# If not create it
-		if dictionary.has_key(i) == True:
-			current_word = dictionary[i]
+		if word_dictionary.has_key(i) == True:
+			current_word = word_dictionary[i]
+			current_grammer = current_word.getGrammer()
 		else:
-			current_word = Word(i)
-			dictionary[i] = current_word
+			# Get the grammer
+			grammer = summartUtil.getWordFunction(i)
 
-		# Increase how much the word has been used
+			# See if that grammer type exists, if not create it
+			if grammer_dictionary.has_key(grammer) == True:
+				current_grammer = grammer_dictionary[grammer]
+			else:
+				current_grammer = Word(grammer)
+				grammer_dictionary[grammer] = current_grammer
+
+			current_word = Word(i, current_grammer)
+			word_dictionary[i] = current_word
+
+		# Increase how much the word and grammer have been used
 		current_word.increaseUsage()
+		current_grammer.increaseUsage()
 
 		# Link words together as valid words that can be next to
 		# eachother
 		previous_word.addPostWord(current_word)
 		current_word.addPreWord(previous_word)
 
+		previous_grammer.addPostWord(current_grammer)
+		current_grammer.addPreWord(previous_grammer)
+
 		previous_word = current_word
+		previous_grammer = current_grammer
 
 		# Check if the word is black listed meaning we don't want
 		# any contextual linking
@@ -52,16 +73,12 @@ def analyze_sentence(sentence):
 		if skip == True:
 			continue
 
-		# Get the word function and add it to a list of that function
-		# Since they are in the same sentence even if they aren't next
-		# To eachother they are have a connection
-		func = summartUtil.getWordFunction(i)
-		
-		if func == "noun":
+		# Link the context based on what type of word it is
+		if current_word.getGrammer().getWord() == "noun":
 			nouns.append(current_word)
-		elif func == "verb":
+		elif current_word.getGrammer().getWord() == "verb":
 			verbs.append(current_word)
-		elif func == "adjective":
+		elif current_word.getGrammer().getWord() == "adjective":
 			adjectives.append(current_word)
 
 	for i in nouns:

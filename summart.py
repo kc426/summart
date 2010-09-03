@@ -43,13 +43,7 @@ def analyze_sentence(sentence):
 
 		# Check if the word is black listed meaning we don't want
 		# any contextual linking
-		skip = False
-		for j in BLACK_LIST:
-			if i == j:
-				skip = True
-				break
-
-		if skip == True:
+		if i in BLACK_LIST:
 			continue
 
 		# Get the word function and add it to a list of that function

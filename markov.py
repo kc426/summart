@@ -73,7 +73,10 @@ def generate( table, MAXGEN ) :
 		current_word_O = table[current_word]
 		 
 			# choose a suffix from the list
-		word = random.choice( current_word_O.getPostWord() )
+		print current_word_O.getPostWord()
+		#for w in current_word_O.getPostWord():
+		#	print w.getWord()
+		#word = random.choice( current_word_O.getPostWord() )
 
 		#if suf == NONWORD :	# caught our "end story" marker.  Get out
 		#	if len( line ) > 0 :
@@ -82,9 +85,10 @@ def generate( table, MAXGEN ) :
 		#if len( line ) + len( suf ) > MAX_LINE_LEN :
 		#	print line
 		#	line = ""
-		line = line + " " + word.getPostWord()
+		
+		#line = line + " " + word.getPostWord()
 
-		current_word = word.getPostWord
+		#current_word = word.getPostWord
 	# print until it sees the last period
 	periodIndex = line.rfind('.')+1
 	print line[:periodIndex]

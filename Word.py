@@ -13,9 +13,13 @@ class Word:
 
 	# Return a random word from a dictionary
 	def __get_rand_word__(self, dict):
-		list = dict.values()
-		element = random.randint(0, len(list) - 1)
-		return list[element]
+		keys = dict.keys()
+		try:
+			key = random.choice(keys)
+		# return None if empty list
+		except IndexError:
+			return None
+		return dict[key]
 		
 	def __init__(self, main_word = None, grammer = None):
 		random.seed()

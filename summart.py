@@ -3,7 +3,7 @@
 
 import summartUtil
 from Word import Word
-import markov
+from Markov import Markov
 import sys
 
 DEBUG = True 
@@ -11,51 +11,74 @@ DEBUG = True
 # Words to not type
 BLACK_LIST = [ "the", "has", "hasn't", "have", "havn't", "a", "an", "is", "it", "to", "its" ]
 
-# The beginning of a sentence
-start_sentence = Word(None)
+# The grammer a sentence can start with
+start_grammer = Word(None)
+# The grammer a sentence can end with
+end_grammer = Word('\n')
+# All the grammer we know about
+grammer_dictionary = {None:start_grammer, '\n':end_grammer}
+# The words that can start a sentence
+start_word = Word(None, start_grammer)
+# The words that can end a sentence
+end_word = Word('\n', end_grammer)
 # All the words we know about
-dictionary = dict()
+word_dictionary = {None:start_word, '\n':end_word}
 
 def analyze_sentence(sentence):
 	nouns = []
 	verbs = []
 	adjectives = []
-	previous_word = start_sentence
+	current_word = start_word
+	current_grammer = start_grammer
+	previous_word = start_word
+	previous_grammer = start_grammer
 
 	for i in sentence.split():
 		# See if word exists in our dictionary
 		# If not create it
-		if dictionary.has_key(i) == True:
-			current_word = dictionary[i]
+		if word_dictionary.has_key(i) == True:
+			current_word = word_dictionary[i]
+			current_grammer = current_word.getGrammer()
 		else:
-			current_word = Word(i)
-			dictionary[i] = current_word
+			# Get the grammer
+			grammer = summartUtil.getWordFunction(i)
 
-		# Increase how much the word has been used
+			# See if that grammer type exists, if not create it
+			if grammer_dictionary.has_key(grammer) == True:
+				current_grammer = grammer_dictionary[grammer]
+			else:
+				current_grammer = Word(grammer)
+				grammer_dictionary[grammer] = current_grammer
+
+			current_word = Word(i, current_grammer)
+			word_dictionary[i] = current_word
+
+		# Increase how much the word and grammer have been used
 		current_word.increaseUsage()
+		current_grammer.increaseUsage()
 
 		# Link words together as valid words that can be next to
 		# eachother
 		previous_word.addPostWord(current_word)
 		current_word.addPreWord(previous_word)
 
+		previous_grammer.addPostWord(current_grammer)
+		current_grammer.addPreWord(previous_grammer)
+
 		previous_word = current_word
+		previous_grammer = current_grammer
 
 		# Check if the word is black listed meaning we don't want
 		# any contextual linking
 		if i in BLACK_LIST:
 			continue
 
-		# Get the word function and add it to a list of that function
-		# Since they are in the same sentence even if they aren't next
-		# To eachother they are have a connection
-		func = summartUtil.getWordFunction(i)
-		
-		if func == "noun":
+		# Link the context based on what type of word it is
+		if current_word.getGrammer().getWord() == "noun":
 			nouns.append(current_word)
-		elif func == "verb":
+		elif current_word.getGrammer().getWord() == "verb":
 			verbs.append(current_word)
-		elif func == "adjective":
+		elif current_word.getGrammer().getWord() == "adjective":
 			adjectives.append(current_word)
 
 	for i in nouns:
@@ -73,6 +96,11 @@ def analyze_sentence(sentence):
 		for j in adjectives:
 			current_word.addAdjective(j)
 			j.addRelated(current_word)
+
+	current_word.addPostWord(end_word)
+	end_word.addPreWord(current_word)
+	current_grammer.addPostWord(end_grammer)
+	end_grammer.addPreWord(current_grammer)
 
 def main():	
 	text = ""
@@ -98,10 +126,15 @@ def main():
 	else:
 		MAXGEN = int(raw_input("Enter number of words you want to summarize: "))
 	
-	# start analyze
 	sentences = summartUtil.getSentences(text)
+	print "Analyzing text..."
 	for s in sentences:
 		analyze_sentence(s)
+
+	markov = Markov(start_word, end_word, start_grammer, end_grammer)
+
+	print "Generating summary..."
+	print markov.GenerateSentence()
 
 if __name__ == "__main__":
 	main()

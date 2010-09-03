@@ -3,24 +3,24 @@
 import random
 
 class Word:
+	
 	# Check if the word is in the dictionary and only add it if it isn't
 	def __add_word__(self, dict, word):
 		if dict.has_key(word.getWord()):
 			return
 		else:
-			self.dict[word.getWord()] = word
+			dict[word.getWord()] = word
 
 	# Return a random word from a dictionary
-	def __get_rand_word(self, dict):
-		list = self.dict.values()
-		element = random.randint(0, len(list))
+	def __get_rand_word__(self, dict):
+		list = dict.values()
+		element = random.randint(0, len(list) - 1)
 		return list[element]
 		
-	def __init__(self, main_word):
+	def __init__(self, main_word = None, grammer = None):
 		random.seed()
-		self.__main_word__ = main_word
 		# The actual word this is
-		self.__main_word__ = ""
+		self.__main_word__ = main_word
 		# Times the word was used
 		self.__usage_count__ = 0
 		# List of related words
@@ -31,7 +31,13 @@ class Word:
 		self.__pre__ = {}
 		# A list of words that can come after this word
 		self.__post__ = {}
+		# The type of word it is i.e noun, verb, adjective
+		self.__grammer__ = grammer
 
+
+		self.__main_word__ = main_word
+		self.__gramer__ = grammer
+		
 	def __eq__(self, other):
 		if self.__main_word__ == other.getWord():
 			return True
@@ -57,23 +63,26 @@ class Word:
 		self.__add_word__(self.__related__, word)
 
 	def getRelated(self):
-		return self.__get_rand_word(self.__related__)
+		return self.__get_rand_word__(self.__related__)
 
 	def addAdjective(self, word):
 		self.__add_word__(self.__adjectives__, word)
 
 	def getAdjective(self):
-		return self.__get_rand_word(self.__adjectives__)
+		return self.__get_rand_word__(self.__adjectives__)
 
 	def addPostWord(self, word):
 		self.__add_word__(self.__post__, word)
 
 	def getPostWord(self):
-		return self.__get_rand_word(self.__post__)
+		return self.__get_rand_word__(self.__post__)
 
 	def addPreWord(self, word):
 		self.__add_word__(self.__pre__, word)
 
 	def getPreWord(self):
-		return self.__get_rand_word(self.__pre__)
+		return self.__get_rand_word__(self.__pre__)
+
+	def getGrammer(self):
+		return self.__grammer__
 

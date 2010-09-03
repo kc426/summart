@@ -14,7 +14,7 @@ class Word:
 	# Return a random word from a dictionary
 	def __get_rand_word__(self, dict):
 		list = dict.values()
-		element = random.randint(0, len(list))
+		element = random.randint(0, len(list) - 1)
 		return list[element]
 		
 	def __init__(self, main_word = None, grammer = None):

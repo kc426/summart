@@ -3,7 +3,7 @@
 
 import summartUtil
 from Word import Word
-import markov
+from Markov import Markov
 import sys
 
 DEBUG = True 
@@ -103,7 +103,9 @@ def analyze_sentence(sentence):
 			current_word.addAdjective(j)
 			j.addRelated(current_word)
 
+	current_word.addPostWord(end_word)
 	end_word.addPreWord(current_word)
+	current_grammer.addPostWord(end_grammer)
 	end_grammer.addPreWord(current_grammer)
 
 def main():	
@@ -130,10 +132,15 @@ def main():
 	else:
 		MAXGEN = int(raw_input("Enter number of words you want to summarize: "))
 	
-	# start analyze
 	sentences = summartUtil.getSentences(text)
+	print "Analyzing text..."
 	for s in sentences:
 		analyze_sentence(s)
+
+	markov = Markov(start_word, end_word, start_grammer, end_grammer)
+
+	print "Generating summary..."
+	print markov.GenerateSentence()
 
 if __name__ == "__main__":
 	main()

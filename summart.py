@@ -140,10 +140,7 @@ def main():
 		print "Please enter the right option"
 		sys.exit(2)
 
-	if DEBUG:
-		MAXGEN = 200
-	else:
-		MAXGEN = int(raw_input("Enter number of words you want to summarize: "))
+	MAXGEN = int(raw_input("Enter number of population: "))
 	
 	sentences = summartUtil.getSentences(text)
 	print "Analyzing text..."
@@ -156,9 +153,15 @@ def main():
 	outputDot("grammer.dot", grammer_dictionary)
 
 	markov = Markov(start_word, end_word, start_grammer, end_grammer)
+	markov.set_original(text)
+	markov.set_blackList(BLACK_LIST)
 
 	print "Generating summary..."
-	print markov.GenerateSentence()
+	#print markov.GenerateSentence()
+	
+	population = markov.GenerateSummary(MAXGEN)
+	print markov.select(population)
+
 
 if __name__ == "__main__":
 	main()

@@ -72,7 +72,7 @@ class Markov:
 
 	##
 	# @param population list of summary
-	def select(self, population, original="", black_list=[])
+	def select(self, population, original="", black_list=[]):
 		if original != "":
 			self.__original__ = original
 		if black_list != []:
@@ -83,7 +83,7 @@ class Markov:
 		rank = {}
 		i=0
 		for summary in population:
-			score = fitness(summary)
+			score = self.fitness(summary)
 			if not rank.has_key(score):
 				rank[score] = [i]
 			else:
@@ -91,6 +91,6 @@ class Markov:
 			i+=1
 		bestIndex = max(rank.keys())
 		#pick the first one if multiple summary has the same score
-		return population[rank[bestIndex]]
+		return population[rank[bestIndex][0]]
 
 		

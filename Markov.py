@@ -23,6 +23,14 @@ class Markov:
 
 		return sentence
 
+	def GenerateSummary(self, length):
+		summary = []
+
+		for i in range(length):
+			summary.append(self.GenerateSentence())
+
+		return summary
+
 	def fitness(original, summary="", black_list=[]):
 		wordUsage = {}
 		#remove punctuation

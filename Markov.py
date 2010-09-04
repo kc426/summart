@@ -10,6 +10,10 @@ class Markov:
 		self.__start_grammer__ = start_grammer
 		self.__end_grammer__ = end_grammer
 
+		self.__wordUsage__ = {}
+		self.__original__ = ""
+		self.__black_list__ = []
+
 	def GenerateSentence(self):
 		sentence = ""
 		current_word = self.__start_word__
@@ -23,21 +27,27 @@ class Markov:
 
 		return sentence
 
-	def fitness(original, summary="", black_list=[]):
-		wordUsage = {}
-		#remove punctuation
+	def set_original(self, original):
+		self.__original__ = original
+
+	def set_blackList(self, black_list):
+		self.__black_list__ = black_list
+
+	def fitness(self, summary):
 		punctuation = re.compile(r"[^\w\s]")
-		original = punctuation.sub("", original)
+
+		if self.__wordUsage__ == {} or self.__original__ == "":
+			#remove punctuation
+			self.__original__ = punctuation.sub("", self.__original__)
 	
-		#counting the usage in the original article
-		words = original.split()
-		for word in words:
-			word = word.lower()
-			if not wordUsage.has_key(word):
-				wordUsage[word] = 1
-			else:
-				wordUsage[word] += 1
-		print wordUsage
+			#counting the usage in the original article
+			words = self.__original__.split()
+			for word in words:
+				word = word.lower()
+				if not self.__wordUsage__.has_key(word):
+					self.__wordUsage__[word] = 1
+				else:
+					self.__wordUsage__[word] += 1
 	
 		# calculating fitness
 		score = 0
@@ -45,9 +55,34 @@ class Markov:
 		words = summary.split()
 		for word in words:
 			word = word.lower()
-			if word in black_list:
+			if word in self.__black_list__:
 				continue
-			if wordUsage.has_key(word):
-				score += wordUsage[word]
-				wordUsage[word] = 0 # repeated words do not again point
+			if self.__wordUsage__.has_key(word):
+				score += self.__wordUsage__[word]
+				self.__wordUsage__[word] = 0 # repeated words do not again point
 		return score
+
+	##
+	# @param population list of summary
+	def select(self, population, original="", black_list=[])
+		if original != "":
+			self.__original__ = original
+		if black_list != []:
+			self.__black_list__ = black_list
+
+		#calcuate fitness for each summary
+		#rank = {score: index}
+		rank = {}
+		i=0
+		for summary in population:
+			score = fitness(summary)
+			if not rank.has_key(score):
+				rank[score] = [i]
+			else:
+				rank[score].append(i)
+			i+=1
+		bestIndex = max(rank.keys())
+		#pick the first one if multiple summary has the same score
+		return population[rank[bestIndex]]
+
+		

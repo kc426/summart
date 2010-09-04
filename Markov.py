@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+import sys, re
 from Word import Word
 
 class Markov:
@@ -21,3 +23,31 @@ class Markov:
 
 		return sentence
 
+	def fitness(original, summary="", black_list=[]):
+		wordUsage = {}
+		#remove punctuation
+		punctuation = re.compile(r"[^\w\s]")
+		original = punctuation.sub("", original)
+	
+		#counting the usage in the original article
+		words = original.split()
+		for word in words:
+			word = word.lower()
+			if not wordUsage.has_key(word):
+				wordUsage[word] = 1
+			else:
+				wordUsage[word] += 1
+		print wordUsage
+	
+		# calculating fitness
+		score = 0
+		summary = punctuation.sub("", summary)
+		words = summary.split()
+		for word in words:
+			word = word.lower()
+			if word in black_list:
+				continue
+			if wordUsage.has_key(word):
+				score += wordUsage[word]
+				wordUsage[word] = 0 # repeated words do not again point
+		return score

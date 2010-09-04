@@ -43,13 +43,13 @@ class Word:
 		self.__gramer__ = grammer
 		
 	def __eq__(self, other):
-		if self.__main_word__ == other.getWord():
+		if other is not None and self.__main_word__ == other.getWord():
 			return True
 		else:
 			return False
 
 	def __ne__(self, other):
-		if self.__main_word__ != other.getWord():
+		if other is None or self.__main_word__ != other.getWord():
 			return True
 		else:
 			return False

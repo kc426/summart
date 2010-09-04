@@ -12,9 +12,12 @@ class Markov:
 		sentence = ""
 		current_word = self.__start_word__
 
-		while current_word != self.__end_word__:
-			current_word = current_word.getPostWord()
-			sentence = sentence + " " + current_word.getWord()
+		if None not in [current_word, self.__end_word__]:
+			while current_word != self.__end_word__:
+				current_word = current_word.getPostWord()
+				if current_word == None:
+					continue
+				sentence = sentence + " " + current_word.getWord()
 
 		return sentence
 

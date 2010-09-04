@@ -15,6 +15,8 @@ def getWordFunction(word):
 			field = line.split(':')
 			return field[1].strip()
 
+	return "No type"
+
 def getHtmlText(url):
 	f = urllib.urlopen(url)
 	s = f.read()

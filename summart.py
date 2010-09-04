@@ -12,17 +12,17 @@ DEBUG = True
 BLACK_LIST = [ "the", "has", "hasn't", "have", "havn't", "a", "an", "is", "it", "to", "its" ]
 
 # The grammer a sentence can start with
-start_grammer = Word(None)
+start_grammer = Word(' ')
 # The grammer a sentence can end with
-end_grammer = Word('\n')
+end_grammer = Word('.')
 # All the grammer we know about
-grammer_dictionary = {None:start_grammer, '\n':end_grammer}
+grammer_dictionary = {' ':start_grammer, '.':end_grammer}
 # The words that can start a sentence
-start_word = Word(None, start_grammer)
+start_word = Word(' ', start_grammer)
 # The words that can end a sentence
-end_word = Word('\n', end_grammer)
+end_word = Word('.', end_grammer)
 # All the words we know about
-word_dictionary = {None:start_word, '\n':end_word}
+word_dictionary = {'':start_word, '\n':end_word}
 
 def analyze_sentence(sentence):
 	nouns = []
@@ -102,6 +102,16 @@ def analyze_sentence(sentence):
 	current_grammer.addPostWord(end_grammer)
 	end_grammer.addPreWord(current_grammer)
 
+def outputDot(filename, dict):
+	f = open(filename, 'w')
+	f.write("digraph dictionary {\n")
+
+	for i in dict.keys():
+		dict[i].writePostDot(f)
+
+	f.write("}\n")
+	f.close()
+
 def main():	
 	text = ""
 	option = int(raw_input("1. URL, 2. plain text:"))
@@ -130,6 +140,11 @@ def main():
 	print "Analyzing text..."
 	for s in sentences:
 		analyze_sentence(s)
+
+	# Generate graph with
+	# dot -Tpng -o test.png test.dot
+	outputDot("word.dot", word_dictionary)
+	outputDot("grammer.dot", grammer_dictionary)
 
 	markov = Markov(start_word, end_word, start_grammer, end_grammer)
 

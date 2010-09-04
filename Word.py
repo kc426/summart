@@ -81,6 +81,10 @@ class Word:
 	def getPostWord(self):
 		return self.__get_rand_word__(self.__post__)
 
+	def writePostDot(self, f):
+		for i in self.__post__.keys():
+			f.write("\"" + self.getWord() + "\" -> \"" + self.__post__[i].getWord() + "\";\n")
+
 	def addPreWord(self, word):
 		self.__add_word__(self.__pre__, word)
 
@@ -89,4 +93,3 @@ class Word:
 
 	def getGrammer(self):
 		return self.__grammer__
-

@@ -1,0 +1,38 @@
+CS485 Final AI project
+Member:
+Kevin Cheung
+Lee Trager
+
+Usage:
+In order to run this program you have to install Python.
+python summart.py
+1. URL, 2. plain text: 2
+
+Enter the filename: samples/gulf.txt
+Enter number of population: 20
+
+
+Algorithm:
+
+Crossovers:
+We use a standard markov chain algorithm to generate our population of summary.
+
+Fitness function:
+The fitness function use word counts to determine the score of each article. 
+Since duplicated words are not good for a summary, if a word appear a second time in the summary, the score won't increase. 
+For example,
+Tom has a nice car.
+The car is black.
+Tom loves the car.
+
+score board
+car: 3
+Tom: 2
+black: 1
+
+Sample summary:
+Tom has a black car. 
+score = 2 + 1 + 3 = 6
+
+some words are black listed. e.g. is, has, a...
+

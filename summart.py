@@ -6,7 +6,7 @@ from Word import Word
 from Markov import Markov
 import sys
 
-DEBUG = True 
+DEBUG = False 
 
 # Words to not type
 BLACK_LIST = [ "the", "has", "hasn't", "have", "havn't", "a", "an", "is", "it", "to", "its" ]

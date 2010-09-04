@@ -27,6 +27,14 @@ class Markov:
 
 		return sentence
 
+	def GenerateSummary(self, length):
+		summary = []
+
+		for i in range(length):
+			summary.append(self.GenerateSentence())
+
+		return summary
+
 	def set_original(self, original):
 		self.__original__ = original
 

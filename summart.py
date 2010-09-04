@@ -102,6 +102,12 @@ def analyze_sentence(sentence):
 	current_grammer.addPostWord(end_grammer)
 	end_grammer.addPreWord(current_grammer)
 
+# Generate a dot file so its easier to visualize what is going on
+# Each word in the dot file will have links to all valid post words
+# Empty is the start of a sentence while . is the end of a sentence
+# To convert from dot file to a png make sure you have graphviz installed
+# and do
+# dot -Tpng -o word.png word.dot
 def outputDot(filename, dict):
 	f = open(filename, 'w')
 	f.write("digraph dictionary {\n")

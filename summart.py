@@ -16,15 +16,18 @@ start_grammer = Word(' ')
 # The grammer a sentence can end with
 end_grammer = Word('.')
 # All the grammer we know about
-grammer_dictionary = {' ':start_grammer, '.':end_grammer}
+grammer_dictionary = {start_grammer.getWord():start_grammer, end_grammer.getWord():end_grammer}
 # The words that can start a sentence
 start_word = Word(' ', start_grammer)
 # The words that can end a sentence
 end_word = Word('.', end_grammer)
 # All the words we know about
-word_dictionary = {'':start_word, '\n':end_word}
+word_dictionary = {start_word.getWord():start_word, end_word.getWord():end_word}
 
 def analyze_sentence(sentence):
+	sentence = sentence.strip()
+	if sentence == '':
+		return
 	nouns = []
 	verbs = []
 	adjectives = []

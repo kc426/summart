@@ -84,6 +84,11 @@ def analyze_sentence(sentence):
 		elif current_word.getGrammer().getWord() == "adjective":
 			adjectives.append(current_word)
 
+	current_word.addPostWord(end_word)
+	end_word.addPreWord(current_word)
+	current_grammer.addPostWord(end_grammer)
+	end_grammer.addPreWord(current_grammer)
+
 	for i in nouns:
 		current_word = i
 		for j in nouns:
@@ -99,11 +104,6 @@ def analyze_sentence(sentence):
 		for j in adjectives:
 			current_word.addAdjective(j)
 			j.addRelated(current_word)
-
-	current_word.addPostWord(end_word)
-	end_word.addPreWord(current_word)
-	current_grammer.addPostWord(end_grammer)
-	end_grammer.addPreWord(current_grammer)
 
 # Generate a dot file so its easier to visualize what is going on
 # Each word in the dot file will have links to all valid post words
